@@ -110,7 +110,7 @@ const MessageBubble: React.FC<Props> = ({ message, onSpeak, onOpenCodeCanvas, on
             isUser
               ? "bg-gradient-to-br from-primary/80 to-primary/40 ring-1 ring-primary/20"
               : "bg-gradient-to-br from-primary via-primary/80 to-primary/50 ring-1 ring-primary/30",
-            !isUser && message.isStreaming && "animate-pulse"
+            !isUser && message.isStreaming && "animate-pulse shadow-[0_0_15px_hsl(var(--primary)/0.6)]"
           )}>
             {isUser ? (
               <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary-foreground" />

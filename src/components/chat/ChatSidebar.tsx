@@ -105,12 +105,12 @@ const ChatSidebar: React.FC<Props> = ({
 
   return (
     <>
-      {isOpen && <div className="fixed inset-0 bg-background/60 backdrop-blur-md z-40 md:hidden" onClick={onClose} />}
+      {isOpen && <div className="fixed inset-0 bg-background/60 backdrop-blur-md z-40 lg:hidden" onClick={onClose} />}
 
       <aside className={cn(
-        "fixed md:relative z-50 md:z-auto h-full w-[260px] flex flex-col border-r border-border/10 transition-transform duration-300",
+        "fixed lg:relative z-50 lg:z-auto h-full w-[260px] flex flex-col border-r border-border/10 transition-transform duration-300",
         "bg-card/80 backdrop-blur-2xl",
-        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 md:w-0 md:border-0 md:overflow-hidden",
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-0 lg:border-0 lg:overflow-hidden",
         theme === "ios" && "ios-blur border-r-border/20"
       )}>
         {/* Header */}
@@ -122,7 +122,7 @@ const ChatSidebar: React.FC<Props> = ({
           >
             <Plus className="h-3.5 w-3.5 text-primary" /> New Chat
           </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7 md:hidden" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="h-7 w-7 lg:hidden" onClick={onClose}>
             <X className="h-3.5 w-3.5" />
           </Button>
         </div>

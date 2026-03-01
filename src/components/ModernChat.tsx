@@ -23,8 +23,7 @@ import OnboardingModal from "./chat/OnboardingModal";
 import { useUsageLimit } from "@/hooks/useUsageLimit";
 import { useChatPersistence, type ChatMessage } from "@/hooks/useChatPersistence";
 import { useToast } from "@/hooks/use-toast";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+// Auth removed — no login required
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -61,7 +60,7 @@ const ModernChat: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [showScrollBtn, setShowScrollBtn] = useState(false);
   const [activeMode, setActiveMode] = useState<AiMode>("assistant");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1024);
   const [codeCanvasContent, setCodeCanvasContent] = useState<string | null>(null);
   const [writingCanvasContent, setWritingCanvasContent] = useState<string | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -359,6 +358,9 @@ const ModernChat: React.FC = () => {
 
   return (
     <div className="flex h-dvh overflow-hidden relative">
+      {isLoading && (
+        <div className="absolute top-0 left-0 right-0 h-0.5 z-[100] bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse" />
+      )}
       <RGBBackground modeColor={MODE_COLORS[activeMode] || "purple"} />
 
       <ChatSidebar
@@ -378,7 +380,7 @@ const ModernChat: React.FC = () => {
       )}>
         {/* Header */}
         <header className={cn(
-          "flex items-center gap-2 px-3 py-2.5 border-b border-border/5 bg-card/30 backdrop-blur-3xl sticky top-0 z-10",
+          "flex items-center gap-2 px-3 py-2.5 border-b border-border/5 bg-card/30 backdrop-blur-3xl sticky top-0 z-10 h-12 sm:h-auto",
           settings.theme === "ios" && "ios-blur border-b-border/20"
         )}>
           <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-accent/30 rounded-xl" onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -391,8 +393,8 @@ const ModernChat: React.FC = () => {
             </div>
             {!isMobile && (
               <div>
-                <h1 className="text-sm font-bold font-['Space_Grotesk'] gradient-text leading-none">MahmudGPT</h1>
-                <p className="text-[8px] text-muted-foreground/40 leading-none mt-0.5">World's Best AI</p>
+                <h1 className="text-xs sm:text-sm font-bold font-['Space_Grotesk'] gradient-text leading-none">MahmudGPT</h1>
+                <p className="text-[8px] sm:text-[9px] text-muted-foreground/40 leading-none mt-0.5">World's Best AI</p>
               </div>
             )}
           </div>
@@ -509,14 +511,16 @@ const ModernChat: React.FC = () => {
           ) : (
             <div className={fontSize}>
               {chat.messages.map(msg => (
-                <MessageBubble
-                  key={msg.id} message={msg}
-                  onSpeak={handleSpeak}
-                  onOpenCodeCanvas={setCodeCanvasContent}
-                  onOpenWritingCanvas={setWritingCanvasContent}
-                  onDownloadReport={activeMode === "deep-research" ? downloadReport : undefined}
-                  theme={settings.theme}
-                />
+                <div key={msg.id} className="animate-in slide-in-from-bottom-4 fade-in duration-300">
+                  <MessageBubble
+                    message={msg}
+                    onSpeak={handleSpeak}
+                    onOpenCodeCanvas={setCodeCanvasContent}
+                    onOpenWritingCanvas={setWritingCanvasContent}
+                    onDownloadReport={activeMode === "deep-research" ? downloadReport : undefined}
+                    theme={settings.theme}
+                  />
+                </div>
               ))}
               {isLoading && !chat.messages.find(m => m.role === "assistant" && m.isStreaming) && (
                 <div className="px-4 py-6 flex flex-col items-center gap-3">
@@ -558,7 +562,7 @@ const ModernChat: React.FC = () => {
 
         {/* Input Area */}
         <div className={cn(
-          "border-t border-border/5 bg-card/20 backdrop-blur-3xl p-2.5 sm:p-3",
+          "border-t border-border/5 bg-card/20 backdrop-blur-3xl p-2.5 sm:p-3 pb-[env(safe-area-inset-bottom)]",
           settings.theme === "ios" && "ios-blur border-t-border/20"
         )}>
           <div className="max-w-3xl mx-auto">
@@ -586,80 +590,85 @@ const ModernChat: React.FC = () => {
             )}
 
             <div className={cn(
-              "flex items-end gap-1.5 rounded-2xl border px-3 py-2 transition-all glass-panel",
-              triggerMode === "image"
-                ? "border-primary/30 bg-primary/5"
-                : "border-border/10",
-              "focus-within:border-primary/30 focus-within:shadow-[0_0_30px_hsl(var(--primary)/0.1)]",
-              settings.theme === "ios" && "rounded-[22px] border-border/40 bg-accent/20"
+              "relative rounded-2xl p-[1px] transition-all",
+              "input-glow"
             )}>
-              {/* Mode panel toggle */}
-              <div className="relative" ref={modePanelRef}>
-                <button
-                  className={cn(
-                    "h-8 w-8 rounded-xl flex items-center justify-center transition-all",
-                    showModePanel ? "bg-primary/10 text-primary rotate-45" : "hover:bg-accent/30 text-muted-foreground"
-                  )}
-                  onClick={() => setShowModePanel(!showModePanel)}
-                >
-                  <Plus className="h-4 w-4 transition-transform" />
-                </button>
-                {showModePanel && (
-                  <div className="absolute bottom-12 left-0 glass-panel-strong rounded-2xl p-2 min-w-[200px] animate-scale-in shadow-2xl z-50">
-                    <p className="text-[9px] font-semibold text-muted-foreground/50 uppercase tracking-wider px-2 mb-1.5">Mode</p>
-                    <div className="grid grid-cols-2 gap-1">
-                      {MODE_OPTIONS.map(m => (
-                        <button
-                          key={m.id}
-                          onClick={() => { setActiveMode(m.id as AiMode); setShowModePanel(false); }}
-                          className={cn(
-                            "flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs transition-all",
-                            activeMode === m.id
-                              ? "bg-primary/15 text-primary font-semibold"
-                              : "hover:bg-accent/50 text-muted-foreground"
-                          )}
-                        >
-                          <span>{m.icon}</span>
-                          <span>{m.label}</span>
-                        </button>
-                      ))}
+              <div className={cn(
+                "flex items-end gap-1.5 rounded-2xl border px-3 py-2 transition-all glass-panel bg-background/80",
+                triggerMode === "image"
+                  ? "border-primary/30 bg-primary/5"
+                  : "border-border/10",
+                "focus-within:border-primary/30 focus-within:shadow-[0_0_30px_hsl(var(--primary)/0.1)]",
+                settings.theme === "ios" && "rounded-[22px] border-border/40 bg-accent/20"
+              )}>
+                {/* Mode panel toggle */}
+                <div className="relative" ref={modePanelRef}>
+                  <button
+                    className={cn(
+                      "h-8 w-8 rounded-xl flex items-center justify-center transition-all",
+                      showModePanel ? "bg-primary/10 text-primary rotate-45" : "hover:bg-accent/30 text-muted-foreground"
+                    )}
+                    onClick={() => setShowModePanel(!showModePanel)}
+                  >
+                    <Plus className="h-4 w-4 transition-transform" />
+                  </button>
+                  {showModePanel && (
+                    <div className="absolute bottom-12 left-0 glass-panel-strong rounded-2xl p-2 min-w-[200px] max-w-[90vw] animate-scale-in shadow-2xl z-50">
+                      <p className="text-[9px] font-semibold text-muted-foreground/50 uppercase tracking-wider px-2 mb-1.5">Mode</p>
+                      <div className="flex overflow-x-auto gap-2 p-1 sm:grid sm:grid-cols-2 sm:gap-1 no-scrollbar">
+                        {MODE_OPTIONS.map(m => (
+                          <button
+                            key={m.id}
+                            onClick={() => { setActiveMode(m.id as AiMode); setShowModePanel(false); }}
+                            className={cn(
+                              "flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs transition-all whitespace-nowrap min-w-max",
+                              activeMode === m.id
+                                ? "bg-primary/15 text-primary font-semibold"
+                                : "hover:bg-accent/50 text-muted-foreground"
+                            )}
+                          >
+                            <span>{m.icon}</span>
+                            <span>{m.label}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-
-              {uploadedFiles.length === 0 && (
-                <FileUpload files={uploadedFiles} onFilesChange={setUploadedFiles} />
-              )}
-              <textarea
-                ref={textareaRef}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={triggerMode === "image" ? "Describe your image..." : "Message MahmudGPT… (try @Image or @Video)"}
-                rows={1}
-                className="flex-1 bg-transparent border-none outline-none resize-none text-sm py-1.5 placeholder:text-muted-foreground/25 max-h-[160px]"
-              />
-              <div className="flex items-center gap-0.5 pb-0.5">
-                <Button
-                  variant="ghost" size="icon"
-                  className={cn("h-8 w-8 rounded-xl hover:bg-accent/30", isListening && "text-destructive bg-destructive/10 animate-pulse")}
-                  onClick={toggleListening}
-                >
-                  {isListening ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-4 w-4" />}
-                </Button>
-                <button
-                  className={cn(
-                    "h-9 w-9 rounded-xl flex items-center justify-center transition-all",
-                    input.trim()
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 active:scale-90"
-                      : "bg-muted/30 text-muted-foreground/40"
                   )}
-                  onClick={send}
-                  disabled={!input.trim() || isLoading}
-                >
-                  <Send className="h-4 w-4" />
-                </button>
+                </div>
+
+                {uploadedFiles.length === 0 && (
+                  <FileUpload files={uploadedFiles} onFilesChange={setUploadedFiles} />
+                )}
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={triggerMode === "image" ? "Describe your image..." : "Message MahmudGPT… (try @Image or @Video)"}
+                  rows={1}
+                  className="flex-1 bg-transparent border-none outline-none resize-none text-xs sm:text-sm py-1.5 placeholder:text-muted-foreground/25 max-h-[160px]"
+                />
+                <div className="flex items-center gap-0.5 pb-0.5">
+                  <Button
+                    variant="ghost" size="icon"
+                    className={cn("h-8 w-8 rounded-xl hover:bg-accent/30", isListening && "text-destructive bg-destructive/10 animate-pulse")}
+                    onClick={toggleListening}
+                  >
+                    {isListening ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-4 w-4" />}
+                  </Button>
+                  <button
+                    className={cn(
+                      "h-9 w-9 rounded-xl flex items-center justify-center transition-all active:scale-90 relative overflow-hidden",
+                      input.trim()
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                        : "bg-muted/30 text-muted-foreground/40"
+                    )}
+                    onClick={send}
+                    disabled={!input.trim() || isLoading}
+                  >
+                    <Send className="h-4 w-4 relative z-10" />
+                  </button>
+                </div>
               </div>
             </div>
             <p className="text-center text-[8px] text-muted-foreground/15 mt-2">

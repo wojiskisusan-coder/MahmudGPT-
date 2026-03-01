@@ -1,9 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Anek+Bangla:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Anek+Bangla:wght@400;500;600;700&display=swap');
 
 /* SolaimanLipi-style Bengali font */
 .font-bengali {
@@ -654,4 +653,15 @@
 }
 .premium-input:focus-within {
   box-shadow: 0 0 0 2px hsl(var(--primary) / 0.3), 0 0 20px hsl(var(--primary) / 0.1), 0 0 40px hsl(var(--glow-secondary) / 0.05);
+}
+
+@keyframes rgb-border-spin {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.input-glow {
+  background: linear-gradient(270deg, #7c3aed, #06b6d4, #7c3aed);
+  background-size: 400% 400%;
+  animation: rgb-border-spin 4s ease infinite;
 }

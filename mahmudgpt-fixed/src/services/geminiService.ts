@@ -25,6 +25,14 @@ function isNameRelatedQuestion(prompt: string): boolean {
     'what are you called',
     'what are you',
     'what is this',
+    'who made you',
+    'who created you',
+    'who is your creator',
+    'who is your developer',
+    'who is your owner',
+    'who built you',
+    'tell me about your creator',
+    'about you'
   ];
   
   return namePatterns.some(pattern => lowercasePrompt.includes(pattern));
@@ -228,12 +236,12 @@ export const generateResponse = async (prompt: string, language: Language, files
     // Check if the prompt is asking about name or identity
     if (isNameRelatedQuestion(processedPrompt) && (!files || files.length === 0)) {
       if (language.code === 'en' || language.code === 'bn') {
-        return language.code === 'en' 
-          ? "Hello, I am MahmudGPT, your helpful AI assistant powered by Google Gemini. How can I assist you today?"
-          : "হ্যালো, আমি মাহমুদজিপিটি, Google Gemini দ্বারা চালিত আপনার সহায়ক AI সহকারী। আমি আজ আপনাকে কীভাবে সাহায্য করতে পারি?";
+        return `[DEVELOPER_PROFILE_START]Tasnim Mahmud[DEVELOPER_PROFILE_END]
+
+I was created by **Tasnim Mahmud** — a developer and AI enthusiast from Bangladesh. He built MahmudGPT to make advanced AI accessible to everyone. You can reach him on WhatsApp: +8801782242874`;
       } else {
         // Let's use Gemini for translating the introduction
-        const introPrompt = `Translate the following to ${language.name}: "Hello, I am MahmudGPT, your helpful AI assistant powered by Google Gemini. How can I assist you today?"`;
+        const introPrompt = `Translate the following to ${language.name}: "I was created by Tasnim Mahmud — a developer and AI enthusiast from Bangladesh. He built MahmudGPT to make advanced AI accessible to everyone. You can reach him on WhatsApp: +8801782242874"`;
         const response = await fetchFromGemini(introPrompt);
         return response;
       }
