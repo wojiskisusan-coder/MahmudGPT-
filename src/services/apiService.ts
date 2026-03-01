@@ -10,7 +10,7 @@ class ApiService {
 
   constructor() {
     const savedKey = localStorage.getItem("mahmudgpt-custom-api-key");
-    this.currentApiKey = savedKey || process.env.GEMINI_API_KEY || "";
+    this.currentApiKey = savedKey || import.meta.env.VITE_GEMINI_API_KEY || "";
     this.aiInstance = new GoogleGenAI({ apiKey: this.currentApiKey });
   }
 
@@ -38,7 +38,7 @@ class ApiService {
   }
 
   resetApiKey() {
-    const defaultKey = process.env.GEMINI_API_KEY || "";
+    const defaultKey = import.meta.env.VITE_GEMINI_API_KEY || "";
     this.updateApiKey(defaultKey);
     localStorage.removeItem("mahmudgpt-custom-api-key");
   }
