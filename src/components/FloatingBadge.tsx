@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import mahmudProfile from "@/assets/mahmud-profile.jpg";
+const mahmudProfile = "https://picsum.photos/seed/mahmud/200/200";
 import { X, Globe, Github, Mail } from "lucide-react";
 
 const FloatingBadge: React.FC = () => {

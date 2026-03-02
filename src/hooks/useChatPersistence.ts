@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
 import { supabase } from "@/integrations/supabase/client";
 import type { Conversation } from "@/components/chat/ChatSidebar";
 
@@ -36,16 +34,9 @@ export function useChatPersistence() {
   const [loadingConvs, setLoadingConvs] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
 
-  // Get user ID from Firebase Auth
+  // Get user ID - defaulting to local-user since auth is removed
   useEffect(() => {
-    if (!auth) {
-      setUserId("anonymous-user");
-      return;
-    }
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUserId(user?.uid ?? "anonymous-user");
-    });
-    return () => unsubscribe();
+    setUserId("local-user");
   }, []);
 
   // Load conversations

@@ -5,7 +5,7 @@ import MarkdownRenderer from "./chat/MarkdownRenderer";
 import ImageDisplay from "./chat/ImageDisplay";
 import ThinkingBlock from "./chat/ThinkingBlock";
 import { audioController } from "@/services/audioController";
-import mahmudProfile from "@/assets/mahmud-profile.jpg";
+const mahmudProfile = "https://picsum.photos/seed/mahmud/200/200";
 
 interface Props {
   message: {
@@ -125,9 +125,14 @@ const MessageBubble: React.FC<Props> = ({ message, onSpeak, onOpenCodeCanvas, on
           theme === "ios" && isUser && "flex flex-col items-end"
         )}>
           {theme !== "ios" && (
-            <p className="text-[10px] sm:text-[11px] font-semibold mb-1.5 sm:mb-2 text-muted-foreground/70">
-              {isUser ? "You" : <span className="gradient-text font-bold">MahmudGPT</span>}
-              {!isUser && message.isStreaming && <span className="ml-2 streaming-dot text-xs">●</span>}
+            <p className="text-[10px] sm:text-[11px] font-semibold mb-1.5 sm:mb-2 text-muted-foreground/70 flex items-center gap-2">
+              {isUser ? "You" : (
+                <>
+                  <span className="gradient-text font-bold">MahmudGPT</span>
+                  <span className="px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[7px] font-bold text-primary uppercase tracking-tighter">PRO</span>
+                </>
+              )}
+              {!isUser && message.isStreaming && <span className="ml-1 streaming-dot text-xs">●</span>}
             </p>
           )}
 

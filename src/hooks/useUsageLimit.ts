@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
 
 const FREE_DAILY_LIMIT = 30;
 const STORAGE_KEY = "mahmudai-usage";
@@ -26,32 +24,14 @@ export function useUsageLimit() {
   const [isPro, setIsPro] = useState(false);
   const [proLoading, setProLoading] = useState(true);
 
-  // Check pro status
+  // Check pro status - defaulting to false as auth is removed
   const checkProStatus = useCallback(async () => {
-    try {
-      if (!auth) { setIsPro(false); setProLoading(false); return; }
-      const user = auth.currentUser;
-      if (!user) { setIsPro(false); setProLoading(false); return; }
-
-      // Since Supabase is unavailable, we'll default to false for Pro status
-      setIsPro(false);
-    } catch {
-      setIsPro(false);
-    } finally {
-      setProLoading(false);
-    }
+    setIsPro(false);
+    setProLoading(false);
   }, []);
 
   useEffect(() => {
-    if (!auth) {
-      setProLoading(false);
-      checkProStatus(); // Run it once to set initial state
-      return;
-    }
-    const unsubscribe = onAuthStateChanged(auth, () => {
-      checkProStatus();
-    });
-    return () => unsubscribe();
+    checkProStatus();
   }, [checkProStatus]);
 
   useEffect(() => {

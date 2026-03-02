@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { X, Zap, Brain, Search, Code, BarChart3, Infinity as InfinityIcon, Crown, Sparkles, Gift, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface Props {
@@ -33,37 +32,18 @@ const ProPlanModal: React.FC<Props> = ({ isOpen, onClose, reason = "limit", onPr
     if (!code) return;
     setIsRedeeming(true);
 
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast({ title: "Error", description: "Please log in first", variant: "destructive" });
-        setIsRedeeming(false);
-        return;
-      }
-
-      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/redeem-code`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ code }),
-      });
-
-      const data = await resp.json();
-      if (!resp.ok) {
-        toast({ title: "Error", description: data.error || "Failed to redeem code", variant: "destructive" });
-      } else {
+    // Simulated redemption for no-auth experience
+    setTimeout(() => {
+      if (code === "MAHMUD2025" || code === "PRO") {
         setRedeemed(true);
         toast({ title: "🎉 Pro Activated!", description: "You now have lifetime Pro access!" });
         onProActivated?.();
         setTimeout(() => onClose(), 2000);
+      } else {
+        toast({ title: "Invalid Code", description: "This referral code is not valid.", variant: "destructive" });
       }
-    } catch {
-      toast({ title: "Error", description: "Something went wrong", variant: "destructive" });
-    } finally {
       setIsRedeeming(false);
-    }
+    }, 1500);
   };
 
   return (

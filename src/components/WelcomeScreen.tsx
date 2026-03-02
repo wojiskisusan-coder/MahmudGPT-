@@ -26,6 +26,7 @@ const WelcomeScreen: React.FC = () => {
           exit={{ opacity: 0, transition: { duration: 0.5 } }}
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/95 backdrop-blur-3xl"
         >
+          <div className="liquid-mesh" />
           <div className="relative mb-8">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/40 via-primary/20 to-transparent rounded-full blur-3xl scale-150 animate-pulse" />
             <motion.div

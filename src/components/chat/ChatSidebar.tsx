@@ -108,22 +108,25 @@ const ChatSidebar: React.FC<Props> = ({
       {isOpen && <div className="fixed inset-0 bg-background/60 backdrop-blur-md z-40 lg:hidden" onClick={onClose} />}
 
       <aside className={cn(
-        "fixed lg:relative z-50 lg:z-auto h-full w-[260px] flex flex-col border-r border-border/10 transition-transform duration-300",
-        "bg-card/80 backdrop-blur-2xl",
+        "fixed lg:relative z-50 lg:z-auto h-full w-[280px] flex flex-col transition-all duration-500 ease-[0.16, 1, 0.3, 1]",
+        "liquid-glass border-r border-white/10",
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-0 lg:border-0 lg:overflow-hidden",
         theme === "ios" && "ios-blur border-r-border/20"
       )}>
         {/* Header */}
-        <div className="p-3 flex items-center justify-between border-b border-border/10">
+        <div className="p-4 flex items-center justify-between border-b border-white/5">
           <Button
             variant="ghost" size="sm"
-            className="flex-1 justify-start gap-2 hover:bg-primary/5 text-xs h-8"
+            className="flex-1 justify-start gap-3 hover:bg-primary/10 text-xs h-10 rounded-xl transition-all group"
             onClick={onNew}
           >
-            <Plus className="h-3.5 w-3.5 text-primary" /> New Chat
+            <div className="h-6 w-6 rounded-lg bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Plus className="h-4 w-4 text-primary" />
+            </div>
+            <span className="font-bold tracking-tight">New Chat</span>
           </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7 lg:hidden" onClick={onClose}>
-            <X className="h-3.5 w-3.5" />
+          <Button variant="ghost" size="icon" className="h-8 w-8 lg:hidden ml-2 rounded-lg" onClick={onClose}>
+            <X className="h-4 w-4" />
           </Button>
         </div>
 

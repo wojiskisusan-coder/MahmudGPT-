@@ -357,7 +357,8 @@ const ModernChat: React.FC = () => {
   const usagePercent = usage.isPro ? 100 : Math.min((usage.count / usage.limit) * 100, 100);
 
   return (
-    <div className="flex h-dvh overflow-hidden relative">
+    <div className="flex h-dvh overflow-hidden relative bg-background">
+      <div className="liquid-mesh" />
       {isLoading && (
         <div className="absolute top-0 left-0 right-0 h-0.5 z-[100] bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse" />
       )}
@@ -380,7 +381,7 @@ const ModernChat: React.FC = () => {
       )}>
         {/* Header */}
         <header className={cn(
-          "flex items-center gap-2 px-3 py-2.5 border-b border-border/5 bg-card/30 backdrop-blur-3xl sticky top-0 z-10 h-12 sm:h-auto",
+          "flex items-center gap-2 px-3 py-2.5 border-b border-white/5 sticky top-0 z-30 h-14 sm:h-16 liquid-glass",
           settings.theme === "ios" && "ios-blur border-b-border/20"
         )}>
           <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-accent/30 rounded-xl" onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -392,9 +393,12 @@ const ModernChat: React.FC = () => {
               <Sparkles className="h-3.5 w-3.5 text-primary-foreground" />
             </div>
             {!isMobile && (
-              <div>
-                <h1 className="text-xs sm:text-sm font-bold font-['Space_Grotesk'] gradient-text leading-none">MahmudGPT</h1>
-                <p className="text-[8px] sm:text-[9px] text-muted-foreground/40 leading-none mt-0.5">World's Best AI</p>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5">
+                  <h1 className="text-xs sm:text-sm font-bold font-['Space_Grotesk'] gradient-text leading-none">MahmudGPT</h1>
+                  <div className="px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[7px] font-bold text-primary uppercase tracking-tighter">PRO</div>
+                </div>
+                <p className="text-[8px] sm:text-[9px] text-muted-foreground/40 leading-none mt-0.5">Intelligence Redefined</p>
               </div>
             )}
           </div>
@@ -562,18 +566,18 @@ const ModernChat: React.FC = () => {
 
         {/* Input Area */}
         <div className={cn(
-          "border-t border-border/5 bg-card/20 backdrop-blur-3xl p-2.5 sm:p-3 pb-[env(safe-area-inset-bottom)]",
-          settings.theme === "ios" && "ios-blur border-t-border/20"
+          "p-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] z-30",
+          isMobile && "pb-24"
         )}>
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto relative">
             {/* @Trigger indicator */}
             {triggerMode && (
               <div className={cn(
-                "flex items-center gap-2 px-3 py-1.5 mb-2 rounded-xl text-[10px] font-medium border animate-fade-in",
+                "absolute -top-10 left-0 flex items-center gap-2 px-3 py-1.5 rounded-xl text-[10px] font-medium border animate-fade-in",
                 triggerMode === "image"
-                  ? "bg-primary/5 border-primary/20 text-primary"
+                  ? "bg-primary/10 border-primary/20 text-primary"
                   : "bg-accent/30 border-accent/50 text-muted-foreground",
-                settings.theme === "ios" && "ios-card"
+                "liquid-glass"
               )}>
                 {triggerMode === "image" ? (
                   <><ImageIcon className="h-3 w-3" /> Image Generation Mode</>
@@ -584,50 +588,50 @@ const ModernChat: React.FC = () => {
             )}
 
             {uploadedFiles.length > 0 && (
-              <div className="mb-1.5">
+              <div className="mb-3">
                 <FileUpload files={uploadedFiles} onFilesChange={setUploadedFiles} />
               </div>
             )}
 
             <div className={cn(
-              "relative rounded-2xl p-[1px] transition-all",
-              "input-glow"
+              "relative rounded-[2rem] p-[1.5px] transition-all duration-500",
+              "input-glow shadow-2xl shadow-primary/10"
             )}>
               <div className={cn(
-                "flex items-end gap-1.5 rounded-2xl border px-3 py-2 transition-all glass-panel bg-background/80",
+                "flex items-end gap-3 rounded-[2rem] border px-4 py-3 transition-all liquid-glass bg-background/40",
                 triggerMode === "image"
                   ? "border-primary/30 bg-primary/5"
-                  : "border-border/10",
-                "focus-within:border-primary/30 focus-within:shadow-[0_0_30px_hsl(var(--primary)/0.1)]",
+                  : "border-white/10",
+                "focus-within:border-primary/40 focus-within:bg-background/60",
                 settings.theme === "ios" && "rounded-[22px] border-border/40 bg-accent/20"
               )}>
                 {/* Mode panel toggle */}
                 <div className="relative" ref={modePanelRef}>
                   <button
                     className={cn(
-                      "h-8 w-8 rounded-xl flex items-center justify-center transition-all",
-                      showModePanel ? "bg-primary/10 text-primary rotate-45" : "hover:bg-accent/30 text-muted-foreground"
+                      "h-10 w-10 rounded-2xl flex items-center justify-center transition-all",
+                      showModePanel ? "bg-primary/20 text-primary rotate-45" : "hover:bg-primary/10 text-muted-foreground"
                     )}
                     onClick={() => setShowModePanel(!showModePanel)}
                   >
-                    <Plus className="h-4 w-4 transition-transform" />
+                    <Plus className="h-5 w-5 transition-transform" />
                   </button>
                   {showModePanel && (
-                    <div className="absolute bottom-12 left-0 glass-panel-strong rounded-2xl p-2 min-w-[200px] max-w-[90vw] animate-scale-in shadow-2xl z-50">
-                      <p className="text-[9px] font-semibold text-muted-foreground/50 uppercase tracking-wider px-2 mb-1.5">Mode</p>
-                      <div className="flex overflow-x-auto gap-2 p-1 sm:grid sm:grid-cols-2 sm:gap-1 no-scrollbar">
+                    <div className="absolute bottom-14 left-0 liquid-glass rounded-3xl p-3 min-w-[220px] max-w-[90vw] animate-scale-in shadow-2xl z-50 border border-white/10">
+                      <p className="text-[10px] font-bold text-primary/60 uppercase tracking-widest px-2 mb-2">Modes</p>
+                      <div className="flex flex-col gap-1">
                         {MODE_OPTIONS.map(m => (
                           <button
                             key={m.id}
                             onClick={() => { setActiveMode(m.id as AiMode); setShowModePanel(false); }}
                             className={cn(
-                              "flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs transition-all whitespace-nowrap min-w-max",
+                              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all",
                               activeMode === m.id
-                                ? "bg-primary/15 text-primary font-semibold"
-                                : "hover:bg-accent/50 text-muted-foreground"
+                                ? "bg-primary/20 text-primary font-bold"
+                                : "hover:bg-white/5 text-muted-foreground"
                             )}
                           >
-                            <span>{m.icon}</span>
+                            <span className="text-lg">{m.icon}</span>
                             <span>{m.label}</span>
                           </button>
                         ))}
@@ -637,36 +641,38 @@ const ModernChat: React.FC = () => {
                 </div>
 
                 {uploadedFiles.length === 0 && (
-                  <FileUpload files={uploadedFiles} onFilesChange={setUploadedFiles} />
+                  <div className="pb-1">
+                    <FileUpload files={uploadedFiles} onFilesChange={setUploadedFiles} />
+                  </div>
                 )}
                 <textarea
                   ref={textareaRef}
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={triggerMode === "image" ? "Describe your image..." : "Message MahmudGPT… (try @Image or @Video)"}
+                  placeholder={triggerMode === "image" ? "Describe your image..." : "Ask MahmudGPT… (@Image, @Video)"}
                   rows={1}
-                  className="flex-1 bg-transparent border-none outline-none resize-none text-xs sm:text-sm py-1.5 placeholder:text-muted-foreground/25 max-h-[160px]"
+                  className="flex-1 bg-transparent border-none outline-none resize-none text-sm sm:text-base py-2 placeholder:text-muted-foreground/30 max-h-[160px] font-medium"
                 />
-                <div className="flex items-center gap-0.5 pb-0.5">
+                <div className="flex items-center gap-1 pb-1">
                   <Button
                     variant="ghost" size="icon"
-                    className={cn("h-8 w-8 rounded-xl hover:bg-accent/30", isListening && "text-destructive bg-destructive/10 animate-pulse")}
+                    className={cn("h-10 w-10 rounded-2xl hover:bg-primary/10", isListening && "text-destructive bg-destructive/10 animate-pulse")}
                     onClick={toggleListening}
                   >
-                    {isListening ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-4 w-4" />}
+                    {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-5 w-5" />}
                   </Button>
                   <button
                     className={cn(
-                      "h-9 w-9 rounded-xl flex items-center justify-center transition-all active:scale-90 relative overflow-hidden",
+                      "h-11 w-11 rounded-2xl flex items-center justify-center transition-all active:scale-90 relative overflow-hidden",
                       input.trim()
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                        : "bg-muted/30 text-muted-foreground/40"
+                        ? "bg-primary text-primary-foreground shadow-xl shadow-primary/30"
+                        : "bg-white/5 text-muted-foreground/20"
                     )}
                     onClick={send}
                     disabled={!input.trim() || isLoading}
                   >
-                    <Send className="h-4 w-4 relative z-10" />
+                    <Send className="h-5 w-5 relative z-10" />
                   </button>
                 </div>
               </div>
@@ -698,12 +704,14 @@ const ModernChat: React.FC = () => {
       <OnboardingModal isOpen={onboardingOpen} onClose={() => setOnboardingOpen(false)} />
       
       {/* Mobile Bottom Navigation */}
-      <div className="mobile-bottom-nav">
+      <div className="mobile-bottom-nav liquid-glass border-t border-white/10">
         <button 
           onClick={() => { handleNewChat(); setSidebarOpen(false); }}
           className={cn("mobile-nav-item", chat.messages.length === 0 && "active")}
         >
-          <Plus className="h-5 w-5" />
+          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center mb-1">
+            <Plus className="h-5 w-5" />
+          </div>
           <span>New Chat</span>
         </button>
         <button 
@@ -724,7 +732,7 @@ const ModernChat: React.FC = () => {
           onClick={() => { setProModalReason("locked"); setProModalOpen(true); }}
           className={cn("mobile-nav-item", usage.isPro && "active")}
         >
-          <Crown className="h-5 w-5" />
+          <Crown className="h-5 w-5 text-amber-500" />
           <span>Pro</span>
         </button>
       </div>

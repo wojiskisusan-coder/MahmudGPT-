@@ -24,116 +24,109 @@ const Landing: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden bg-background">
+      <div className="liquid-mesh" />
       <RGBBackground modeColor="purple" />
 
       {/* Nav - Compact, non-blocking */}
-      <nav className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3">
-        <div className="flex items-center gap-2">
-          <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
-            <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary-foreground" />
+      <nav className="relative z-50 flex items-center justify-between px-4 sm:px-8 py-4 sm:py-6">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/20">
+            <Sparkles className="h-5 w-5 text-primary-foreground" />
           </div>
-          <h1 className="text-xs sm:text-base font-bold font-['Space_Grotesk'] gradient-text">MahmudGPT</h1>
+          <h1 className="text-lg sm:text-xl font-bold font-['Space_Grotesk'] gradient-text tracking-tight">MahmudGPT</h1>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate("/auth")}
-            className="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg text-[9px] sm:text-xs font-medium border border-border/30 hover:border-primary/50 bg-card/30 backdrop-blur-sm hover:bg-card/50 transition-all text-foreground"
+            onClick={() => navigate("/chat")}
+            className="px-5 py-2 rounded-xl text-sm font-bold liquid-glass text-foreground hover:bg-card/40 transition-all border border-primary/20 hover:border-primary/50"
           >
-            Sign In
-          </button>
-          <button
-            onClick={() => navigate("/auth?tab=signup")}
-            className="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg text-[9px] sm:text-xs font-bold shiny-button text-primary-foreground"
-          >
-            Get Started
+            Launch Experience
           </button>
         </div>
       </nav>
 
       {/* Hero - Mobile optimized with proper spacing */}
-      <section className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-8 pb-8 sm:pt-16 sm:pb-14 md:pt-24 md:pb-20">
+      <section className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-12 pb-12 sm:pt-24 sm:pb-20">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative mb-4 sm:mb-6"
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative mb-8"
         >
-          <div className="h-16 w-16 sm:h-24 sm:w-24 md:h-32 md:w-32 rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-primary via-primary/80 to-primary/40 flex items-center justify-center animate-hero-glow rgb-border">
-            <Sparkles className="h-8 w-8 sm:h-12 sm:w-12 md:h-16 md:w-16 text-primary-foreground" />
+          <div className="h-24 w-24 sm:h-32 sm:w-32 md:h-40 md:w-40 rounded-[2.5rem] bg-gradient-to-br from-primary via-primary/80 to-primary/40 flex items-center justify-center animate-hero-glow rgb-border shadow-2xl shadow-primary/40">
+            <Sparkles className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 text-primary-foreground" />
           </div>
-          <div className="absolute -top-1 -right-1 h-5 w-5 sm:h-7 sm:w-7 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center animate-pulse">
-            <Zap className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 text-primary-foreground" />
+          <div className="absolute -top-2 -right-2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center animate-pulse shadow-lg">
+            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
           </div>
         </motion.div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold font-['Space_Grotesk'] mb-2 sm:mb-3 leading-tight"
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="space-y-6 max-w-4xl"
         >
-          <span className="gradient-text">MahmudGPT</span>
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.5 }}
-          className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-sm sm:max-w-lg mb-3 px-2"
-        >
-          The world's most powerful AI platform. Think. Create. Analyze. Research. Code.
-        </motion.p>
+          <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold font-['Space_Grotesk'] tracking-tighter leading-[0.85]">
+            Intelligence <br />
+            <span className="gradient-text">Redefined.</span>
+          </h2>
+          
+          <p className="text-base sm:text-xl md:text-2xl text-muted-foreground/80 max-w-2xl mx-auto font-medium leading-relaxed">
+            Experience the next generation of AI. Liquid interface, deep reasoning, and unparalleled creativity.
+          </p>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 mb-5 sm:mb-7"
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="mt-10 flex flex-col sm:flex-row items-center gap-4"
         >
-          {["Fast", "Intelligent", "Analytical", "Premium", "Alive"].map((w) => (
-            <span key={w} className="px-2 sm:px-3 py-0.5 rounded-full text-[8px] sm:text-[10px] font-medium border border-primary/30 bg-primary/5 text-primary">
-              {w}
+          <button
+            onClick={() => navigate("/chat")}
+            className="group relative flex items-center gap-3 px-8 py-4 rounded-2xl text-base font-bold shiny-button text-primary-foreground animate-upgrade-glow overflow-hidden"
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              Start Chatting <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </span>
-          ))}
+          </button>
+          <button
+            onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+            className="px-8 py-4 rounded-2xl text-base font-medium liquid-glass text-muted-foreground hover:text-foreground transition-all"
+          >
+            Explore Features
+          </button>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.65, duration: 0.5 }}
-          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="mt-16 flex items-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-500"
         >
-          <button
-            onClick={() => navigate("/auth?tab=signup")}
-            className="flex items-center gap-2 px-5 sm:px-8 py-2 sm:py-3 rounded-xl text-[11px] sm:text-sm font-bold shiny-button text-primary-foreground animate-upgrade-glow"
-          >
-            <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            Start Free — No Credit Card
-            <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          </button>
-          <button
-            onClick={() => navigate("/auth")}
-            className="flex items-center gap-2 px-5 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium border border-border/50 hover:border-primary/50 bg-accent/20 hover:bg-accent/40 transition-all text-muted-foreground hover:text-foreground"
-          >
-            Sign In
-          </button>
+          {/* Mock partners/tech stack */}
+          <div className="flex items-center gap-2 font-bold text-lg"><Cpu className="h-5 w-5" /> NVIDIA</div>
+          <div className="flex items-center gap-2 font-bold text-lg"><Globe className="h-5 w-5" /> GOOGLE</div>
+          <div className="flex items-center gap-2 font-bold text-lg"><Shield className="h-5 w-5" /> OPENAI</div>
         </motion.div>
       </section>
 
-      {/* Stats */}
-      <section className="relative z-10 px-4 sm:px-6 pb-10 sm:pb-16">
-        <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+      {/* Stats - Liquid Glass Cards */}
+      <section className="relative z-10 px-4 sm:px-8 pb-20">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
           {STATS.map((s, i) => (
             <motion.div
               key={s.label}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 + i * 0.1, duration: 0.4 }}
-              className="glass-panel-strong rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center premium-card"
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="liquid-glass rounded-3xl p-8 text-center premium-card"
             >
-              <p className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text font-['Space_Grotesk']">{s.value}</p>
-              <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 sm:mt-1">{s.label}</p>
+              <p className="text-3xl sm:text-4xl font-bold gradient-text font-['Space_Grotesk'] mb-2">{s.value}</p>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-widest">{s.label}</p>
             </motion.div>
           ))}
         </div>
@@ -191,11 +184,11 @@ const Landing: React.FC = () => {
             ))}
           </div>
           <button
-            onClick={() => navigate("/auth?tab=signup")}
+            onClick={() => navigate("/chat")}
             className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold shiny-button text-primary-foreground animate-upgrade-glow"
           >
             <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            Get Started — It's Free
+            Launch Experience — It's Free
           </button>
         </div>
       </section>
