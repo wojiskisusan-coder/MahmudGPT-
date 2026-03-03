@@ -33,8 +33,8 @@ export async function streamChat({
   if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_URL.includes("placeholder")) {
     try {
       const lastMessage = messages[messages.length - 1]?.content || "";
-      const { currentLanguage } = useLanguageStore.getState();
-      const response = await fallbackGeminiResponse(lastMessage, currentLanguage);
+      const { language } = useLanguageStore.getState();
+      const response = await fallbackGeminiResponse(lastMessage, language);
       
       const words = response.split(" ");
       for (let i = 0; i < words.length; i++) {
@@ -123,12 +123,12 @@ export async function streamChat({
     try {
       // Fallback to direct Gemini API call
       const lastMessage = messages[messages.length - 1]?.content || "";
-      const { currentLanguage } = useLanguageStore.getState();
+      const { language } = useLanguageStore.getState();
       
       // Convert fileData to File objects if possible, or just pass the prompt
       // Note: generateResponse expects File objects, but we have base64. 
       // For simplicity in fallback, we'll just send the text prompt.
-      const response = await fallbackGeminiResponse(lastMessage, currentLanguage);
+      const response = await fallbackGeminiResponse(lastMessage, language);
       
       // Simulate streaming for the fallback
       const words = response.split(" ");

@@ -3,11 +3,11 @@ import {
   Plus, MessageSquare, Trash2, X, Crown, Sparkles, ChevronDown,
   Code, Search, Brain, Calculator, GraduationCap, Image, Pencil,
   BarChart3, Lightbulb, FileSearch, Video, Mic, BookOpen,
-  Layers, Palette, Monitor, Headphones, Briefcase, Cpu
+  Layers, Palette, Monitor, Headphones, Briefcase, Cpu, Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { AiMode } from "./ModeSelector";
+import { type AiMode, AI_MODES } from "@/constants/chatConstants";
 
 export interface Conversation {
   id: string;
@@ -25,44 +25,27 @@ const MODE_CATEGORIES: ModeCategory[] = [
   {
     label: "Chat",
     icon: MessageSquare,
-    modes: [
-      { id: "assistant", label: "Assistant", icon: MessageSquare, description: "Fast general AI" },
-    ],
+    modes: AI_MODES.filter(m => ["assistant"].includes(m.id)),
   },
   {
     label: "Intelligence",
     icon: Brain,
-    modes: [
-      { id: "thinking", label: "Thinking", icon: Brain, description: "Deep reasoning", pro: true },
-      { id: "research", label: "Research", icon: Search, description: "Research & analysis" },
-      { id: "deep-research", label: "Deep Research", icon: FileSearch, description: "Multi-source report", pro: true },
-      { id: "math", label: "Math", icon: Calculator, description: "Advanced math" },
-    ],
+    modes: AI_MODES.filter(m => ["thinking", "research", "deep-research", "math"].includes(m.id)),
   },
   {
     label: "Developer",
     icon: Code,
-    modes: [
-      { id: "codex", label: "Codex", icon: Code, description: "Elite code gen", pro: true },
-      { id: "analyst", label: "Analyst", icon: BarChart3, description: "Data analysis" },
-      { id: "developer", label: "Dev Mode", icon: Cpu, description: "Highly technical discourse", pro: true },
-    ],
+    modes: AI_MODES.filter(m => ["codex", "analyst", "developer"].includes(m.id)),
   },
   {
     label: "Creative",
     icon: Palette,
-    modes: [
-      { id: "creative", label: "Creative", icon: Lightbulb, description: "Brainstorming" },
-      { id: "image", label: "Image", icon: Image, description: "AI image gen" },
-      { id: "writer", label: "Writer", icon: Pencil, description: "Writing canvas" },
-    ],
+    modes: AI_MODES.filter(m => ["creative", "image", "writer"].includes(m.id)),
   },
   {
     label: "Learning",
     icon: GraduationCap,
-    modes: [
-      { id: "guided", label: "Guided", icon: GraduationCap, description: "Step-by-step tutor" },
-    ],
+    modes: AI_MODES.filter(m => ["guided"].includes(m.id)),
   },
 ];
 
@@ -244,6 +227,13 @@ const ChatSidebar: React.FC<Props> = ({
 
         {/* Footer */}
         <div className="p-3 border-t border-border/10 space-y-2">
+          <button
+            onClick={() => window.dispatchEvent(new Event("show-download-popup"))}
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-semibold bg-accent/30 hover:bg-accent/50 text-foreground transition-colors"
+          >
+            <Download className="h-3 w-3" />
+            Install App
+          </button>
           {onUpgrade && !isPro && (
             <button
               onClick={onUpgrade}

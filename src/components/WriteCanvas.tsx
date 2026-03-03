@@ -28,7 +28,7 @@ const WriteCanvas: React.FC<WriteCanvasProps> = ({
     if (defaultContent && defaultContent !== content) {
       setContent(defaultContent);
     }
-  }, [defaultContent]);
+  }, [defaultContent, content]);
   
   // Save current content
   const saveContent = () => {
@@ -77,7 +77,7 @@ const WriteCanvas: React.FC<WriteCanvasProps> = ({
     } catch (error) {
       console.error("Failed to load from local storage:", error);
     }
-  }, []);
+  }, [defaultContent]);
 
   // Text formatting functions
   const applyFormatting = (formatType: string) => {

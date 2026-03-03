@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, User, Palette, Volume2, Brain, Save, Zap, Ticket, CheckCircle2, AlertCircle } from "lucide-react";
+import { X, User, Palette, Volume2, Brain, Save, Zap, Ticket, CheckCircle2, AlertCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { apiService } from "@/services/apiService";
@@ -236,7 +236,19 @@ const SettingsPanel: React.FC<Props> = ({ isOpen, onClose, settings, onSave, usa
           )}
         </div>
 
-        <div className="px-5 py-3 border-t border-border flex justify-end">
+        <div className="px-5 py-3 border-t border-border flex items-center justify-between">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="gap-2 text-xs"
+            onClick={() => {
+              window.dispatchEvent(new Event("show-download-popup"));
+              onClose();
+            }}
+          >
+            <Download className="h-3.5 w-3.5" />
+            Install App
+          </Button>
           <Button onClick={save} className="gap-2"><Save className="h-3.5 w-3.5" />Save Settings</Button>
         </div>
       </div>

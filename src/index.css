@@ -239,12 +239,35 @@
 
 @layer base {
   * { @apply border-border; }
+  html {
+    @apply h-full overflow-hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground h-full overflow-x-hidden;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
   }
   code, pre { font-family: 'JetBrains Mono', monospace; }
-  h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+  h1, h2, h3 { 
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.2rem, 4vw, 2.5rem);
+  }
+  p {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+  }
+}
+
+/* Minimum touch target size */
+button, a, input, [role="button"] {
+  min-height: 48px;
+  min-width: 48px;
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.btn-compact {
+  min-height: 40px;
+  min-width: 40px;
 }
 
 /* ===== Glass Morphism ===== */

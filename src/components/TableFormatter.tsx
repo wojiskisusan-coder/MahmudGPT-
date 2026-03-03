@@ -38,7 +38,7 @@ const TableFormatter: React.FC<TableFormatterProps> = ({ initialData = "" }) => 
         }
       }
     }
-  }, [initialData]);
+  }, [initialData, input]);
 
   const parseTableData = (text: string): TableData => {
     // Split by lines

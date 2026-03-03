@@ -24,7 +24,7 @@ export interface ChatMessage {
 }
 
 // Helper to check if Supabase is likely working
-const isSupabaseAvailable = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const isSupabaseAvailable = !!supabase && !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 export function useChatPersistence() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -74,11 +74,20 @@ export function useChatPersistence() {
       }
       
       // Fallback to localStorage
-      const localConvsRaw = localStorage.getItem(`mahmudgpt-convs-${userId}`);
-      const localConvs = localConvsRaw ? JSON.parse(localConvsRaw) : [];
-      setConversations(localConvs.map((c: { id: string; title: string; createdAt: string }) => ({
-        ...c,
-        createdAt: new Date(c.createdAt)
+      let localConvs = [];
+      try {
+        const localConvsRaw = localStorage.getItem(`mahmudgpt-convs-${userId}`);
+        const parsed = localConvsRaw ? JSON.parse(localConvsRaw) : [];
+        localConvs = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error("Failed to parse local conversations", e);
+        localConvs = [];
+      }
+      
+      setConversations(localConvs.map((c: Record<string, unknown>) => ({
+        id: String(c.id || ""),
+        title: String(c.title || "Untitled"),
+        createdAt: c.createdAt ? new Date(c.createdAt as string) : new Date()
       })));
       setLoadingConvs(false);
     };
@@ -130,7 +139,15 @@ export function useChatPersistence() {
       if (cancelled) return;
       
       // Fallback to localStorage
-      const localMsgs = JSON.parse(localStorage.getItem(`mahmudgpt-msgs-${activeConvId}`) || "[]");
+      let localMsgs = [];
+      try {
+        const raw = localStorage.getItem(`mahmudgpt-msgs-${activeConvId}`);
+        const parsed = raw ? JSON.parse(raw) : [];
+        localMsgs = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error("Failed to parse local messages", e);
+        localMsgs = [];
+      }
       setMessages(localMsgs);
       setLoadingMessages(false);
     };
@@ -173,7 +190,12 @@ export function useChatPersistence() {
     
     // Fallback to localStorage
     setConversations(prev => [newConv, ...prev]);
-    const currentConvs = JSON.parse(localStorage.getItem(`mahmudgpt-convs-${userId}`) || "[]");
+    let currentConvs = [];
+    try {
+      currentConvs = JSON.parse(localStorage.getItem(`mahmudgpt-convs-${userId}`) || "[]");
+    } catch (e) {
+      console.error("Failed to parse local conversations during create", e);
+    }
     localStorage.setItem(`mahmudgpt-convs-${userId}`, JSON.stringify([newConv, ...currentConvs]));
     setActiveConvIdState(newId);
     return newId;
@@ -210,12 +232,22 @@ export function useChatPersistence() {
     }
     
     // Fallback to localStorage
-    const currentMsgs = JSON.parse(localStorage.getItem(`mahmudgpt-msgs-${convId}`) || "[]");
+    let currentMsgs = [];
+    try {
+      currentMsgs = JSON.parse(localStorage.getItem(`mahmudgpt-msgs-${convId}`) || "[]");
+    } catch (e) {
+      console.error("Failed to parse local messages during add", e);
+    }
     localStorage.setItem(`mahmudgpt-msgs-${convId}`, JSON.stringify([...currentMsgs, fullMsg]));
     
     // Update conversation timestamp in local storage
-    const localConvsRaw = localStorage.getItem(`mahmudgpt-convs-${userId}`);
-    const localConvs = localConvsRaw ? JSON.parse(localConvsRaw) : [];
+    let localConvs = [];
+    try {
+      const localConvsRaw = localStorage.getItem(`mahmudgpt-convs-${userId}`);
+      localConvs = localConvsRaw ? JSON.parse(localConvsRaw) : [];
+    } catch (e) {
+      console.error("Failed to parse local conversations during timestamp update", e);
+    }
     const updatedConvs = localConvs.map((c: { id: string; title: string; createdAt: string; updatedAt?: string }) => 
       c.id === convId ? { ...c, updatedAt: new Date().toISOString() } : c
     );

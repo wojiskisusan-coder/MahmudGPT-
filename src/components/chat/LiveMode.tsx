@@ -57,7 +57,7 @@ const LiveMode: React.FC<Props> = ({ isOpen, onClose, voiceId }) => {
     } catch (err) {
       console.error("Camera error:", err);
     }
-  }, [facingMode]);
+  }, [facingMode, stopStream]);
 
   // Start screen share
   const startScreenShare = useCallback(async () => {
@@ -74,7 +74,7 @@ const LiveMode: React.FC<Props> = ({ isOpen, onClose, voiceId }) => {
     } catch (err) {
       console.error("Screen share error:", err);
     }
-  }, []);
+  }, [stopStream]);
 
   const stopStream = useCallback(() => {
     streamRef.current?.getTracks().forEach(t => t.stop());
@@ -139,7 +139,7 @@ const LiveMode: React.FC<Props> = ({ isOpen, onClose, voiceId }) => {
     recognition.start();
     recognitionRef.current = recognition;
     setIsListening(true);
-  }, [isListening]);
+  }, [isListening, handleUserMessage]);
 
   const stopListening = useCallback(() => {
     recognitionRef.current?.stop();
@@ -203,16 +203,17 @@ const LiveMode: React.FC<Props> = ({ isOpen, onClose, voiceId }) => {
 
   useEffect(() => {
     if (mode === "camera" && isOpen) startCamera();
-  }, [facingMode]);
+  }, [facingMode, mode, isOpen, startCamera]);
 
   // Cleanup
   useEffect(() => {
+    const interval = captureIntervalRef.current;
     return () => {
       stopStream();
       stopListening();
-      if (captureIntervalRef.current) clearInterval(captureIntervalRef.current);
+      if (interval) clearInterval(interval);
     };
-  }, []);
+  }, [stopStream, stopListening]);
 
   if (!isOpen) return null;
 

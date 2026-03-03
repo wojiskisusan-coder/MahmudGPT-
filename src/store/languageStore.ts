@@ -1,11 +1,18 @@
 import { create } from 'zustand';
 
+export type LanguageCode = 'en' | 'bn';
+
+export interface Language {
+  code: LanguageCode;
+  name: string;
+}
+
 interface LanguageState {
-  language: 'en' | 'bn';
-  setLanguage: (lang: 'en' | 'bn') => void;
+  language: Language;
+  setLanguage: (lang: Language) => void;
 }
 
 export const useLanguageStore = create<LanguageState>((set) => ({
-  language: 'en',
+  language: { code: 'en', name: 'English' },
   setLanguage: (language) => set({ language }),
 }));

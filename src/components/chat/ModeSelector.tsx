@@ -1,48 +1,7 @@
 import React, { useState } from "react";
-import { Plus, MessageSquare, Code, Search, BarChart3, Lightbulb, Image, Pencil, Brain, Calculator, GraduationCap, FileSearch, X, Lock, Crown, Cpu, Zap } from "lucide-react";
+import { Plus, X, Lock, Crown, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-export type AiMode = "assistant" | "codex" | "research" | "analyst" | "creative" | "image" | "writer" | "thinking" | "math" | "guided" | "deep-research" | "developer";
-
-interface ModeConfig {
-  id: AiMode;
-  label: string;
-  icon: React.ElementType;
-  description: string;
-  color: string;
-  model: string;
-  pro?: boolean;
-}
-
-export const AI_MODES: ModeConfig[] = [
-  { id: "assistant", label: "Assistant", icon: MessageSquare, description: "Fast general-purpose AI", color: "text-blue-400", model: "Gemini 3 Flash" },
-  { id: "codex", label: "Codex", icon: Code, description: "Elite code generation & debugging", color: "text-green-400", model: "Gemini 2.5 Pro", pro: true },
-  { id: "thinking", label: "Thinking", icon: Brain, description: "Deep reasoning & analysis", color: "text-purple-400", model: "Gemini 2.5 Pro", pro: true },
-  { id: "research", label: "Research", icon: Search, description: "Research & analysis", color: "text-cyan-400", model: "Gemini 2.5 Flash" },
-  { id: "deep-research", label: "Deep Research", icon: FileSearch, description: "Exhaustive multi-source report", color: "text-orange-400", model: "Gemini 2.5 Pro", pro: true },
-  { id: "math", label: "Math", icon: Calculator, description: "Advanced math with LaTeX", color: "text-yellow-400", model: "Gemini 2.5 Pro" },
-  { id: "analyst", label: "Analyst", icon: BarChart3, description: "Data & topic analysis", color: "text-rose-400", model: "Gemini 2.5 Flash" },
-  { id: "creative", label: "Creative", icon: Lightbulb, description: "Creative writing & brainstorming", color: "text-pink-400", model: "Gemini 3 Flash" },
-  { id: "image", label: "Image", icon: Image, description: "AI image generation", color: "text-indigo-400", model: "Gemini 3 Pro Image" },
-  { id: "writer", label: "Writer", icon: Pencil, description: "Long-form writing canvas", color: "text-emerald-400", model: "Gemini 2.5 Flash" },
-  { id: "guided", label: "Guided Learning", icon: GraduationCap, description: "Step-by-step tutoring", color: "text-teal-400", model: "Gemini 2.5 Flash" },
-  { id: "developer", label: "Dev Mode", icon: Cpu, description: "Highly technical system-level discourse", color: "text-slate-400", model: "Gemini 3.1 Pro", pro: true },
-];
-
-export const MODE_SYSTEM_PROMPTS: Record<AiMode, string> = {
-  assistant: "You are MahmudGPT, a helpful, friendly AI assistant.",
-  codex: "You are MahmudGPT in Codex mode — an elite software engineer.",
-  research: "You are MahmudGPT in Research mode — a thorough researcher.",
-  analyst: "You are MahmudGPT in Analyst mode — a data analyst.",
-  creative: "You are MahmudGPT in Creative mode — a creative writer.",
-  image: "You are MahmudGPT in Image mode.",
-  writer: "You are MahmudGPT in Writer mode — a professional writer.",
-  thinking: "You are MahmudGPT in Thinking mode — a deep reasoning AI.",
-  math: "You are MahmudGPT in Math mode — a mathematics expert.",
-  guided: "You are MahmudGPT in Guided Learning mode — an expert tutor.",
-  "deep-research": "You are MahmudGPT in Deep Research mode.",
-  developer: "You are MahmudGPT in Developer Mode. You must communicate EXCLUSIVELY in highly technical, low-level system language. Use jargon like 'kernel-space', 'memory-mapped I/O', 'O(n log n) complexity', 'race conditions', 'deadlocks', and 'pointer arithmetic'. Do not simplify concepts for general audiences. Assume the user is a senior systems engineer or kernel developer.",
-};
+import { type AiMode, type ModeConfig, AI_MODES } from "@/constants/chatConstants";
 
 interface Props {
   activeMode: AiMode;

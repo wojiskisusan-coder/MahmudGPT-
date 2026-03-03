@@ -13,8 +13,14 @@ export function useUsageLimit() {
 
   const [usage, setUsage] = useState<UsageData>(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      if (stored.date === today) return stored;
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const stored = raw ? JSON.parse(raw) : null;
+      if (stored && typeof stored === 'object' && stored.date === today) {
+        return {
+          count: typeof stored.count === 'number' ? stored.count : 0,
+          date: String(stored.date)
+        };
+      }
       return { count: 0, date: today };
     } catch {
       return { count: 0, date: today };

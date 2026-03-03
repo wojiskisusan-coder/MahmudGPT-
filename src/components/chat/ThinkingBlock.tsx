@@ -3,14 +3,15 @@ import { ChevronDown, ChevronUp, Brain, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Props {
-  content: string;
+  thinking: string;
+  isStreaming?: boolean;
   className?: string;
 }
 
-const ThinkingBlock: React.FC<Props> = ({ content, className }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const ThinkingBlock: React.FC<Props> = ({ thinking, isStreaming, className }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
 
-  if (!content) return null;
+  if (!thinking) return null;
 
   return (
     <div className={cn("my-4 rounded-xl border border-border/50 bg-muted/20 overflow-hidden transition-all duration-300", className)}>
@@ -38,7 +39,8 @@ const ThinkingBlock: React.FC<Props> = ({ content, className }) => {
           <div className="relative">
             <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary/20 rounded-full" />
             <div className="pl-4 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap italic">
-              {content}
+              {thinking}
+              {isStreaming && <span className="streaming-dot ml-1">●</span>}
             </div>
           </div>
         </div>

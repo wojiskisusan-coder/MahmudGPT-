@@ -38,8 +38,14 @@ const Landing: React.FC = () => {
         </div>
         <div className="flex items-center gap-3">
           <button
+            onClick={() => window.dispatchEvent(new Event("show-download-popup"))}
+            className="hidden sm:flex px-5 py-2.5 min-h-[44px] rounded-xl text-sm font-bold liquid-glass text-foreground hover:bg-card/40 transition-all border border-primary/20 hover:border-primary/50 active:scale-95"
+          >
+            Install App
+          </button>
+          <button
             onClick={() => navigate("/chat")}
-            className="px-5 py-2 rounded-xl text-sm font-bold liquid-glass text-foreground hover:bg-card/40 transition-all border border-primary/20 hover:border-primary/50"
+            className="px-5 py-2.5 min-h-[44px] rounded-xl text-sm font-bold shiny-button text-primary-foreground transition-all active:scale-95"
           >
             Launch Experience
           </button>
@@ -86,7 +92,7 @@ const Landing: React.FC = () => {
         >
           <button
             onClick={() => navigate("/chat")}
-            className="group relative flex items-center gap-3 px-8 py-4 rounded-2xl text-base font-bold shiny-button text-primary-foreground animate-upgrade-glow overflow-hidden"
+            className="group relative flex items-center gap-3 px-8 py-4 min-h-[56px] rounded-2xl text-base font-bold shiny-button text-primary-foreground animate-upgrade-glow overflow-hidden active:scale-95 transition-all"
           >
             <span className="relative z-10 flex items-center gap-2">
               Start Chatting <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -94,7 +100,7 @@ const Landing: React.FC = () => {
           </button>
           <button
             onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-            className="px-8 py-4 rounded-2xl text-base font-medium liquid-glass text-muted-foreground hover:text-foreground transition-all"
+            className="px-8 py-4 min-h-[56px] rounded-2xl text-base font-medium liquid-glass text-muted-foreground hover:text-foreground transition-all active:scale-95"
           >
             Explore Features
           </button>
