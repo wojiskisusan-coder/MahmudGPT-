@@ -39,7 +39,7 @@ const Landing: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => window.dispatchEvent(new Event("show-download-popup"))}
-            className="hidden sm:flex px-5 py-2.5 min-h-[44px] rounded-xl text-sm font-bold liquid-glass text-foreground hover:bg-card/40 transition-all border border-primary/20 hover:border-primary/50 active:scale-95"
+            className="flex px-5 py-2.5 min-h-[44px] rounded-xl text-sm font-bold liquid-glass text-foreground hover:bg-card/40 transition-all border border-primary/20 hover:border-primary/50 active:scale-95"
           >
             Install App
           </button>

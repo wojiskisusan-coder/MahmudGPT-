@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
 const WelcomeScreen: React.FC = () => {
-  const [show, setShow] = useState(() => !localStorage.getItem("mahmudgpt-welcomed"));
+  const [show, setShow] = useState(() => { try { return !localStorage.getItem("mahmudgpt-welcomed"); } catch(e) { return true; } });
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const WelcomeScreen: React.FC = () => {
   }, [show]);
 
   const handleStart = () => {
-    localStorage.setItem("mahmudgpt-welcomed", "true");
+    try { localStorage.setItem("mahmudgpt-welcomed", "true"); } catch(e) {}
     setShow(false);
   };
 

@@ -735,3 +735,84 @@ button, a, input, [role="button"] {
   background-size: 400% 400%;
   animation: rgb-border-spin 4s ease infinite;
 }
+
+/* ─────────────────────────────────────────
+   MOBILE ENHANCEMENTS & SAFE AREA FIXES
+   ───────────────────────────────────────── */
+
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+html, body {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+/* Fluid typography */
+body {
+  font-size: clamp(0.875rem, 2.2vw, 1rem);
+}
+
+/* Touch target minimum — all interactive elements */
+button, a, [role="button"], input[type="button"], input[type="submit"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Safe bottom padding for chat content */
+.messages-list,
+.chat-content-area {
+  padding-bottom: max(80px, calc(60px + var(--safe-bottom)));
+}
+
+/* Sticky header safe area */
+.sticky-header,
+nav {
+  padding-top: max(0px, var(--safe-top));
+}
+
+/* Modal positioning with safe areas */
+.fixed.inset-0[class*="z-[100]"],
+.fixed.inset-0[class*="z-50"] {
+  padding-bottom: max(1rem, var(--safe-bottom));
+}
+
+/* Bottom nav bar safe area */
+[class*="MobileBottomNav"],
+[class*="bottom-nav"] {
+  padding-bottom: max(0px, var(--safe-bottom));
+}
+
+/* Smooth interactions */
+button, a {
+  transition: opacity 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* Prevent iOS input zoom (must be >= 16px) */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="url"],
+textarea,
+select {
+  font-size: max(16px, 1rem) !important;
+}
+
+/* Prevent horizontal scroll on all mobile viewports */
+* {
+  max-width: 100%;
+}
+
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+}

@@ -2,23 +2,25 @@
   "name": "MahmudGPT",
   "short_name": "MahmudGPT",
   "description": "MahmudGPT - AI Chatbot powered by Google Gemini",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0a0f",
-  "theme_color": "#0a0a0f",
+  "theme_color": "#7c3aed",
+  "categories": ["productivity", "utilities"],
   "icons": [
     {
       "src": "/favicon.svg",
-      "sizes": "192x192",
+      "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/favicon.svg",
-      "sizes": "512x512",
+      "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }

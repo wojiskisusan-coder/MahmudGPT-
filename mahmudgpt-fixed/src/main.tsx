@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-// Global error logging for debugging blank screen
+// Global error logging
 window.onerror = (message, source, lineno, colno, error) => {
   console.error("Global JS Error:", { message, source, lineno, colno, error });
   return false;
@@ -25,4 +25,14 @@ if (!container) {
   } catch (err) {
     console.error("MahmudGPT: Failed to render app:", err);
   }
+}
+
+// Register service worker for PWA
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((reg) => console.log("SW registered:", reg.scope))
+      .catch((err) => console.warn("SW registration failed:", err));
+  });
 }
