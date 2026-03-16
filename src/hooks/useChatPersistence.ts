@@ -1,17 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import type { Conversation } from "@/components/chat/ChatSidebar";
-
-interface DBMessage {
-  id: string;
-  conversation_id: string;
-  role: "user" | "assistant";
-  content: string;
-  thinking?: string | null;
-  image_url?: string | null;
-  files?: { name: string; type: string; previewUrl?: string }[];
-  created_at: string;
-}
 
 export interface ChatMessage {
   id: string;
@@ -23,9 +11,6 @@ export interface ChatMessage {
   files?: { name: string; type: string; previewUrl?: string }[];
 }
 
-// Helper to check if Supabase is likely working
-const isSupabaseAvailable = !!supabase && !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-
 export function useChatPersistence() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConvId, setActiveConvIdState] = useState<string | null>(null);
@@ -34,12 +19,10 @@ export function useChatPersistence() {
   const [loadingConvs, setLoadingConvs] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
 
-  // Get user ID - defaulting to local-user since auth is removed
   useEffect(() => {
     setUserId("local-user");
   }, []);
 
-  // Load conversations
   useEffect(() => {
     if (!userId) {
       setConversations([]);
@@ -47,54 +30,25 @@ export function useChatPersistence() {
       return;
     }
     
-    const load = async () => {
-      setLoadingConvs(true);
-      
-      // Try Supabase first
-      if (isSupabaseAvailable) {
-        try {
-          const { data, error } = await supabase
-            .from("conversations")
-            .select("*")
-            .eq("user_id", userId)
-            .order("updated_at", { ascending: false });
-            
-          if (!error && data) {
-            setConversations(data.map(c => ({
-              id: c.id,
-              title: c.title,
-              createdAt: new Date(c.created_at),
-            })));
-            setLoadingConvs(false);
-            return;
-          }
-        } catch (e) {
-          console.warn("Supabase load failed, falling back to localStorage", e);
-        }
-      }
-      
-      // Fallback to localStorage
-      let localConvs = [];
-      try {
-        const localConvsRaw = localStorage.getItem(`mahmudgpt-convs-${userId}`);
-        const parsed = localConvsRaw ? JSON.parse(localConvsRaw) : [];
-        localConvs = Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        console.error("Failed to parse local conversations", e);
-        localConvs = [];
-      }
-      
-      setConversations(localConvs.map((c: Record<string, unknown>) => ({
-        id: String(c.id || ""),
-        title: String(c.title || "Untitled"),
-        createdAt: c.createdAt ? new Date(c.createdAt as string) : new Date()
-      })));
-      setLoadingConvs(false);
-    };
-    load();
+    setLoadingConvs(true);
+    let localConvs = [];
+    try {
+      const localConvsRaw = localStorage.getItem(`mahmudgpt-convs-${userId}`);
+      const parsed = localConvsRaw ? JSON.parse(localConvsRaw) : [];
+      localConvs = Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error("Failed to parse local conversations", e);
+      localConvs = [];
+    }
+    
+    setConversations(localConvs.map((c: Record<string, unknown>) => ({
+      id: String(c.id || ""),
+      title: String(c.title || "Untitled"),
+      createdAt: c.createdAt ? new Date(c.createdAt as string) : new Date()
+    })));
+    setLoadingConvs(false);
   }, [userId]);
 
-  // Load messages when conversation changes
   useEffect(() => {
     if (!activeConvId || !userId) {
       setMessages([]);
@@ -102,57 +56,18 @@ export function useChatPersistence() {
       return;
     }
     
-    let cancelled = false;
-    const load = async () => {
-      setLoadingMessages(true);
-      
-      // Don't clear messages if we already have some for this conversation 
-      // (e.g. from optimistic update)
-      // Actually, it's safer to just load and then set.
-      
-      if (isSupabaseAvailable) {
-        try {
-          const { data, error } = await supabase
-            .from("messages")
-            .select("*")
-            .eq("conversation_id", activeConvId)
-            .order("created_at", { ascending: true });
-            
-          if (!cancelled && !error && data) {
-            const parsed = (data as DBMessage[]).map(m => ({
-              id: m.id,
-              role: m.role as "user" | "assistant",
-              content: m.content || "",
-              thinking: m.thinking ?? undefined,
-              imageUrl: m.image_url ?? undefined,
-              files: m.files ?? undefined,
-            }));
-            setMessages(parsed);
-            setLoadingMessages(false);
-            return;
-          }
-        } catch (e) {
-          console.warn("Supabase messages load failed", e);
-        }
-      }
-      
-      if (cancelled) return;
-      
-      // Fallback to localStorage
-      let localMsgs = [];
-      try {
-        const raw = localStorage.getItem(`mahmudgpt-msgs-${activeConvId}`);
-        const parsed = raw ? JSON.parse(raw) : [];
-        localMsgs = Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        console.error("Failed to parse local messages", e);
-        localMsgs = [];
-      }
-      setMessages(localMsgs);
-      setLoadingMessages(false);
-    };
-    load();
-    return () => { cancelled = true; };
+    setLoadingMessages(true);
+    let localMsgs = [];
+    try {
+      const raw = localStorage.getItem(`mahmudgpt-msgs-${activeConvId}`);
+      const parsed = raw ? JSON.parse(raw) : [];
+      localMsgs = Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error("Failed to parse local messages", e);
+      localMsgs = [];
+    }
+    setMessages(localMsgs);
+    setLoadingMessages(false);
   }, [activeConvId, userId]);
 
   const setActiveConvId = useCallback((id: string | null) => {
@@ -169,26 +84,6 @@ export function useChatPersistence() {
       createdAt: new Date() 
     };
 
-    // Try Supabase
-    if (isSupabaseAvailable) {
-      try {
-        const { data, error } = await supabase
-          .from("conversations")
-          .insert({ user_id: userId, title: title.slice(0, 60), mode })
-          .select()
-          .single();
-        if (!error && data) {
-          const conv: Conversation = { id: data.id, title: data.title, createdAt: new Date(data.created_at) };
-          setConversations(prev => [conv, ...prev]);
-          setActiveConvIdState(data.id);
-          return data.id;
-        }
-      } catch (e) {
-        console.warn("Supabase create failed", e);
-      }
-    }
-    
-    // Fallback to localStorage
     setConversations(prev => [newConv, ...prev]);
     let currentConvs = [];
     try {
@@ -209,29 +104,6 @@ export function useChatPersistence() {
     const msgId = crypto.randomUUID();
     const fullMsg: ChatMessage = { ...msg, id: msgId };
 
-    // Try Supabase
-    if (isSupabaseAvailable) {
-      try {
-        const { error } = await supabase
-          .from("messages")
-          .insert({
-            conversation_id: convId,
-            user_id: userId,
-            role: msg.role,
-            content: msg.content,
-            thinking: msg.thinking ?? null,
-            image_url: msg.imageUrl ?? null,
-            files: msg.files ?? null,
-          });
-        if (!error) {
-          await supabase.from("conversations").update({ updated_at: new Date().toISOString() }).eq("id", convId);
-        }
-      } catch (e) {
-        console.warn("Supabase add message failed", e);
-      }
-    }
-    
-    // Fallback to localStorage
     let currentMsgs = [];
     try {
       currentMsgs = JSON.parse(localStorage.getItem(`mahmudgpt-msgs-${convId}`) || "[]");
@@ -240,7 +112,6 @@ export function useChatPersistence() {
     }
     localStorage.setItem(`mahmudgpt-msgs-${convId}`, JSON.stringify([...currentMsgs, fullMsg]));
     
-    // Update conversation timestamp in local storage
     let localConvs = [];
     try {
       const localConvsRaw = localStorage.getItem(`mahmudgpt-convs-${userId}`);
@@ -257,15 +128,6 @@ export function useChatPersistence() {
   }, [userId]);
 
   const deleteConversation = useCallback(async (id: string) => {
-    if (isSupabaseAvailable) {
-      try {
-        await supabase.from("conversations").delete().eq("id", id);
-      } catch (e) {
-        console.warn("Supabase delete failed", e);
-      }
-    }
-    
-    // Always update local state and storage
     setConversations(prev => prev.filter(c => c.id !== id));
     if (userId) {
       const currentConvsRaw = localStorage.getItem(`mahmudgpt-convs-${userId}`);
